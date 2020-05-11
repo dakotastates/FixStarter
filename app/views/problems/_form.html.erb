@@ -1,0 +1,40 @@
+<%= form_with(model: problem, local: true) do |form| %>
+  <% if problem.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(problem.errors.count, "error") %> prohibited this problem from being saved:</h2>
+
+      <ul>
+        <% problem.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= form.label :content %>
+    <%= form.text_area :content %>
+  </div>
+  <br>
+  Select a Category<br>
+  <%= form.collection_check_boxes :category_ids, Category.all, :id, :name %>
+  <br>
+      Or Create New Category<br>
+      <%= form.fields_for :categories, @problem.categories.build do |c| %>
+        <%= c.text_field :name %>
+      <% end %>
+
+
+      <% if @problem.user == current_user%>
+      <p>Disable Voting? <%= form.check_box :status, options = {:class => "problem_active"} %></p>
+      <% end %>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

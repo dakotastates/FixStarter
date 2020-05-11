@@ -1,0 +1,16 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Proposals</h1>
+
+<ul>
+    <% @proposals.each do |proposal| %>
+    <li>  <%= link_to proposal.title, proposal_path(proposal) %> for problem <%= link_to proposal.problem.title, problem_path(proposal.problem) %> -- Reported by: <%= proposal.user.username%>
+
+      <% if proposal.user == current_user %>
+      <%= link_to 'Edit', edit_proposal_path(proposal) %>
+      <%= link_to 'Destroy', proposal, method: :delete, data: { confirm: 'Are you sure?' } %></li>
+      <% end %>
+    <% end %>
+  <ul>
+
+<br>

@@ -1,0 +1,43 @@
+
+<%= form_with model:[@problem, @proposal], local: :true do |form| %>
+  <% if proposal.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(proposal.errors.count, "error") %> prohibited this proposal from being saved:</h2>
+
+      <ul>
+        <% proposal.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= form.label :content %>
+    <%= form.text_area :content %>
+  </div>
+
+  <h4>Materials Required</h4>
+  <%= form.fields_for :materials do |m| %>
+
+  <div class="field">
+    <%= m.label :name %>
+    <%= m.text_field :name%>
+  </div>
+
+  <div class="field">
+    <%= m.label :quantity %>
+    <%= m.number_field :quantity%><br>
+  </div>
+
+<% end %>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

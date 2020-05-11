@@ -1,0 +1,18 @@
+<h1>users profile page<h1>
+  <h3> User's Information:</h3>
+<%= @user.email%>
+
+<h3> Problem's Reported by user</h3>
+<ul>
+<% @user.problems.each do |problem| %>
+  <li><%= link_to problem.title, problem_path(problem) %></li>
+<% end %>
+</ul>
+
+<h3> Proposal's Submited by user </h3>
+<ul>
+<% @user.proposals.each do |proposal|%>
+  <li><%= link_to proposal.title, proposal_path(proposal) %><li>
+<% end %>
+</ul>
+<%= link_to 'Dashboard', root_path %>

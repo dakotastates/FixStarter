@@ -1,0 +1,11 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Materials</h1>
+
+<ul>
+    <% @materials.each do |material| %>
+      <li>  <%= link_to material.name, material %></li>
+    <% end %>
+</ul>
+
+<br>

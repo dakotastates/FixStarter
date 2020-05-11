@@ -1,0 +1,105 @@
+
+
+<p>
+  <strong>Title:</strong>
+  <%= @problem.title %>
+</p>
+<strong>Reported on: </strong>
+<p>
+<strong>Categories </strong>
+
+  <ul>
+    <% @problem.categories.each do |cat| %>
+      <li><%= cat.name %></li>
+    <% end%>
+  </ul>
+</p>
+
+<p>
+  <strong>Content:</strong>
+  <%= @problem.content %>
+</p>
+
+<p>
+  <strong>Reported by:</strong>
+  <%= link_to @problem.user.username, user_path(@problem.user.id) %>
+</p>
+
+
+<% if @problem.user == current_user || current_user.admin%>
+  <%= link_to 'Edit', edit_problem_path(@problem) %>
+<% end %>
+
+<% @status = @problem.status %>
+<% if @status == true %>
+
+  <h3>Submited Proposals</h3>
+  <ul>
+    <% @problem.proposals.each do |proposal|%>
+    <li><%= link_to(proposal.title, problem_proposal_path(@problem, proposal)) %> - Results: <%= vote_results(proposal).round(2) %>% - Reported by: <%= link_to proposal.user.username, user_path(proposal.user.id)%></li>
+    <% end %>
+  </ul>
+<% else %>
+
+    <% @user = current_user %>
+    <% @voted = 0 %>
+  <% @user.votes.each do |vote| %>
+
+    <% if @problem.id == vote.proposal.problem.id %>
+        <% @voted +=1  %>
+    <% else %>
+        <% @voted_status = false %>
+    <% end %>
+
+        <% if @voted >= 1 %>
+            <% @voted_status = true %>
+        <% else %>
+            <% @voted_status = false %>
+        <% end %>
+
+<% end %><br>
+
+    <% if @voted_status == false %>
+    Please Vote for the best Proposal
+      <%= render 'vote_form', problem: @problem %>
+    <% else %>
+    Proposals Vote Results<br>
+
+    <ul>
+      <% @problem.proposals.each do |proposal|%>
+      <li><%= link_to(proposal.title, problem_proposal_path(@problem, proposal)) %> - Received <%= vote_count(proposal) %> votes - Results: <%= vote_results(proposal).round(2) %>%</li>
+      <% end %>
+    </ul>
+
+    <% end %>
+<% end %><br><br>
+
+<h4>Comments </h4>
+  <% @problem.comments.each do |comment|%>
+    <p>
+      <%= comment.user.email %> says: <br>
+      <%= comment.content%><br>
+    </p>
+  <% end %>
+
+<h4> Users that have commented on this problem:</h4>
+  <% @problem.users.to_set.each do |user|%>
+    <li><%= user.email%> </li>
+  <% end %>
+
+  <h4> Add Comment</h4>
+
+  <%= form_for Comment.new do |f| %>
+    <%= f.hidden_field :problem_id, value: @problem.id%>
+    <%= f.hidden_field :user_id, value: current_user.id %>
+    <%= f.label :content %>
+    <%= f.text_area :content %>
+
+
+      <br></br>
+    <%= f.submit %>
+  <% end %>
+
+<%= link_to 'Submit A Proposal', new_problem_proposal_path(@problem) %>
+<%= link_to 'Dashboard', root_path %>
+<%= link_to 'Back', problems_path %>

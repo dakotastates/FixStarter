@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Problems</h1>
+
+<div>
+  <h3>Filter Problems:</h3>
+  <%= form_tag("/problems", method: "get") do %>
+    By User: <%= select_tag "user", options_from_collection_for_select(@users, "id", "email"), include_blank: true %>
+
+    By Date: <%= select_tag "date", options_for_select(["Today", "Yesterday", "Last week", "Older"]), include_blank: true %>
+    <%= submit_tag "Filter" %>
+  <% end %>
+</div>
+
+<ul>
+    <% @problems.each do |problem| %>
+      <li><%= link_to problem.title, problem %> - Reported by: <%= problem.user.username%>
+          - Reported on: <%= created(problem) %>
+        <% if problem.user == current_user %>
+      -- <%= link_to 'Edit', edit_problem_path(problem) %>
+      <%= link_to 'Destroy', problem, method: :delete, data: { confirm: 'Are you sure?' } %>
+        <% end %>
+    <% end %></li>
+</ul>
+
+<br>
+
+<%= link_to 'New Problem', new_problem_path %>
+<%= link_to 'Dashboard', root_path %>

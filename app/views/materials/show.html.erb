@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @material.name %>
+</p>
+
+<p>
+  <strong>Quantity:</strong>
+  <%= @material.quantity %>
+</p>
+
+<p>
+  <strong>Proposal:</strong>
+  <%= @material.proposal_id %>
+</p>
+<% if @material.proposal.user == current_user || current_user.admin%>
+<%= link_to 'Edit', edit_problem_proposal_material_path(@material.proposal.problem, @material.proposal, @material) %> |
+<% end %>
+<%= link_to 'Back', materials_path %>
