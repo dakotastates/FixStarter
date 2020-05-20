@@ -28,10 +28,11 @@
 
 <% if @problem.user == current_user || current_user.admin%>
   <%= link_to 'Edit', edit_problem_path(@problem) %>
+  <%= link_to 'Delete', @problem, method: :delete, data: { confirm: 'Are you sure?' } %>
 <% end %>
 
 <% @status = @problem.status %>
-<% if @status == true %>
+<% if @status == false %>
 
   <h3>Submited Proposals</h3>
   <ul>
@@ -41,28 +42,25 @@
   </ul>
 <% else %>
 
-    <% @user = current_user %>
-    <% @voted = 0 %>
-  <% @user.votes.each do |vote| %>
+    <% voted = 0 %>
 
-    <% if @problem.id == vote.proposal.problem.id %>
-        <% @voted +=1  %>
-    <% else %>
-        <% @voted_status = false %>
+    <% current_user.votes.each do |vote|%>
+    <% @problem.proposals.each do |proposal| %>
+      <% if vote.proposal == proposal %>
+          <% voted += 1%>
+        <% end %>
+    <% end %>
     <% end %>
 
-        <% if @voted >= 1 %>
-            <% @voted_status = true %>
-        <% else %>
-            <% @voted_status = false %>
-        <% end %>
-
-<% end %><br>
-
-    <% if @voted_status == false %>
-    Please Vote for the best Proposal
-      <%= render 'vote_form', problem: @problem %>
+    <% if voted == 0 %>
+      <% @voted_status = false%>
     <% else %>
+      <% @voted_status = true%>
+    <% end %>
+
+
+    <% if @voted_status == true || @problem.declare_winner == true %>
+    You have already voted<br><br>
     Proposals Vote Results<br>
 
     <ul>
@@ -70,6 +68,13 @@
       <li><%= link_to(proposal.title, problem_proposal_path(@problem, proposal)) %> - Received <%= vote_count(proposal) %> votes - Results: <%= vote_results(proposal).round(2) %>%</li>
       <% end %>
     </ul>
+
+    The winning proposal is <%= winner.title %>
+
+
+    <% else %>
+    Please Vote for the best Proposal
+      <%= render 'vote_form', problem: @problem %>
 
     <% end %>
 <% end %><br><br>
@@ -90,6 +95,7 @@
   <h4> Add Comment</h4>
 
   <%= form_for Comment.new do |f| %>
+
     <%= f.hidden_field :problem_id, value: @problem.id%>
     <%= f.hidden_field :user_id, value: current_user.id %>
     <%= f.label :content %>
@@ -100,6 +106,8 @@
     <%= f.submit %>
   <% end %>
 
+<% if @status == false %>
 <%= link_to 'Submit A Proposal', new_problem_proposal_path(@problem) %>
-<%= link_to 'Dashboard', root_path %>
+<% end %>
+
 <%= link_to 'Back', problems_path %>

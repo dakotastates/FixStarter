@@ -15,6 +15,13 @@
   <%= @proposal.user.username %>
 </p>
 
+<% w=winner %>
+<% flg=false %>
+<% if w!= nil && w.id == @proposal.id%>
+<% flg=true %>
+<% end %>
+<h4>win status: <%= flg %> </h4>
+
 <p>
   <% if @problem%>
     <strong>Problem:</strong>
@@ -31,8 +38,36 @@
     <% end %>
   </ul>
 
+  <h4>Comments </h4>
+    <% @proposal.proposal_comments.each do |comment|%>
+      <p>
+        <%= comment.user.email %> says: <br>
+        <%= comment.content%><br>
+      </p>
+    <% end %>
+
+    <h4> Users that have commented on this proposal:</h4>
+      <% @proposal.users.to_set.each do |user|%>
+        <li><%= user.email%> </li>
+      <% end %>
+
+    <h4> Add Comment</h4>
+
+    <%= form_for ProposalComment.new do |f| %>
+      <%= f.hidden_field :proposal_id, value: @proposal.id%>
+      <%= f.hidden_field :user_id, value: current_user.id %>
+      <%= f.label :content %>
+      <%= f.text_area :content %>
+
+
+        <br></br>
+      <%= f.submit %>
+    <% end %>
+
 <% if @proposal.user == current_user || current_user.admin%>
 <%= link_to 'Edit', edit_proposal_path(@proposal) %> |
+<%= link_to 'Delete', @proposal, method: :delete, data: { confirm: 'Are you sure?' } %>
+
 <% end %>
 <h6><%= link_to("Return to Problem", problem_path(@proposal.problem)) %></h6>
 <% if @problem%>

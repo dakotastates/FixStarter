@@ -1,6 +1,10 @@
 <h1>users profile page<h1>
   <h3> User's Information:</h3>
-<%= @user.email%>
+First Name: <%= @user.first_name%><br>
+Last NameL Age: <%= @user.last_name%><br>
+Email: <%= @user.email%><br>
+Age: <%= @user.age%><br>
+About Me!: <%= @user.about_me%><br>
 
 <h3> Problem's Reported by user</h3>
 <ul>
@@ -12,7 +16,6 @@
 <h3> Proposal's Submited by user </h3>
 <ul>
 <% @user.proposals.each do |proposal|%>
-  <li><%= link_to proposal.title, proposal_path(proposal) %><li>
+  <li><%= link_to proposal.title, problem_proposal_path(proposal.problem, proposal) %><li>
 <% end %>
 </ul>
-<%= link_to 'Dashboard', root_path %>

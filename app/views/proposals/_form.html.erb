@@ -1,16 +1,8 @@
 
 <%= form_with model:[@problem, @proposal], local: :true do |form| %>
-  <% if proposal.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(proposal.errors.count, "error") %> prohibited this proposal from being saved:</h2>
-
-      <ul>
-        <% proposal.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+<% if @proposal.errors.any? %>
+<h5 style="color: red;"><%= @proposal.errors.full_messages.to_sentence %></h5>
+<% end %>
 
   <div class="field">
     <%= form.label :title %>

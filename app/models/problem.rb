@@ -1,15 +1,19 @@
 class Problem < ApplicationRecord
   validate :is_title_case
   before_validation :make_title_case
+  validates :title, uniqueness: true
+  validates :title, :content, presence: true
 
   has_many :problem_categories, dependent: :destroy
-  has_many :categories, through: :problem_categories
+  has_many :categories, through: :problem_categories, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :users, through: :comments
 
   belongs_to :user
   has_many :proposals, dependent: :destroy
   #has_many :votes, through: :proposals
+
+#default_scope { order(created_at: :desc) }
 
   def categories_attributes=(categories_attributes)
     categories_attributes.values.each do |cat_attr|

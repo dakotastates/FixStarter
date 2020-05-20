@@ -3,7 +3,7 @@ class PagesController < ApplicationController
     @user = current_user
     if @user != nil
       @problems = @user.problems
-      
+
       @proposals = @user.proposals
     end
   end

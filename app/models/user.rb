@@ -6,9 +6,11 @@ class User < ApplicationRecord
 
     has_many :problems, dependent: :destroy
     has_many :proposals, dependent: :destroy
-    has_many :votes
-    has_many :comments
-    has_many :problems, through: :comments
+    has_many :votes, dependent: :destroy
+    has_many :comments, dependent: :destroy
+    has_many :proposal_comments, dependent: :destroy
+    #has_many :problems, through: :comments, dependent: :destroy
+    #has_many :proposals, through: :proposal_comments, dependent: :destroy
 
     def self.from_omniauth(auth)
    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
@@ -16,6 +18,8 @@ class User < ApplicationRecord
    user.password = Devise.friendly_token[0,20]
       end
     end
+
+
 
     def username
       return self.email.split('@')[0].capitalize

@@ -1,15 +1,9 @@
 <%= form_with(model: problem, local: true) do |form| %>
-  <% if problem.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(problem.errors.count, "error") %> prohibited this problem from being saved:</h2>
+<% if @problem.errors.any? %>
+<h5 style="color: red;"><%= @problem.errors.full_messages.to_sentence %></h5>
+<% end %>
 
-      <ul>
-        <% problem.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  
 
   <div class="field">
     <%= form.label :title %>
@@ -31,7 +25,8 @@
 
 
       <% if @problem.user == current_user%>
-      <p>Disable Voting? <%= form.check_box :status, options = {:class => "problem_active"} %></p>
+      <p>Enable Voting <%= form.check_box :status, options = {:class => "problem_active"} %></p>
+      <p>Declare winner? <%= form.check_box :declare_winner, options = {:class => "problem_declare_winner"} %></p>
       <% end %>
 
   <div class="actions">
